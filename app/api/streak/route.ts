@@ -14,7 +14,7 @@ interface GitHubUser {
 
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams
+    const { searchParams } = new URL(request.url)
     const username = searchParams.get("username")
 
     if (!username) {
