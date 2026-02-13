@@ -3,6 +3,9 @@ import path from "path"
 import { readFile } from "fs/promises"
 import { getSkillToSlugMap } from "@/lib/simple-icons-cache"
 
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 const BACKGROUND_USERNAME = "web2and3"
 const LOCAL_BACKGROUND_PATH = path.join(process.cwd(), "public", "background.jpg")
 const FALLBACK_BACKGROUND_URL =
@@ -205,7 +208,7 @@ function errorSvg(message: string): NextResponse {
   return new NextResponse(svg, {
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
-      "Cache-Control": "no-cache",
+      "Cache-Control": "no-store, max-age=0",
     },
   })
 }
@@ -263,7 +266,7 @@ export async function GET(request: NextRequest) {
       status: 200,
       headers: {
         "Content-Type": "image/svg+xml; charset=utf-8",
-        "Cache-Control": "public, max-age=300",
+        "Cache-Control": "public, max-age=0",
         "Access-Control-Allow-Origin": "*",
       },
     })

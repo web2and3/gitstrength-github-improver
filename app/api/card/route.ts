@@ -3,6 +3,9 @@ import path from "path"
 import { readFile } from "fs/promises"
 import { getRequestOrigin } from "@/lib/request-origin"
 
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 // Username that gets the custom background image (others use theme only)
 const BACKGROUND_USERNAME = "web2and3"
 
@@ -96,7 +99,7 @@ export async function GET(request: NextRequest) {
       status: 200,
       headers: {
         "Content-Type": "image/svg+xml; charset=utf-8",
-        "Cache-Control": "public, max-age=300",
+        "Cache-Control": "public, max-age=0",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
@@ -297,7 +300,7 @@ function generateErrorCard(message: string): NextResponse {
   return new NextResponse(errorSvg, {
     headers: {
       "Content-Type": "image/svg+xml",
-      "Cache-Control": "no-cache",
+      "Cache-Control": "no-store, max-age=0",
     },
   })
 }

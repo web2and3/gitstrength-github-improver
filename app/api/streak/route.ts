@@ -1,6 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getRequestOrigin } from "@/lib/request-origin"
 
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 interface GitHubUser {
   login: string
   avatar_url: string
@@ -189,7 +192,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(result, {
       headers: {
-        "Cache-Control": "public, max-age=300", // Cache for 5 minutes
+        "Cache-Control": "no-store, max-age=0",
         "Access-Control-Allow-Origin": "*",
       },
     })

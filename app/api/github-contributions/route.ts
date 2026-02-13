@@ -610,7 +610,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result, {
       headers: {
-        "Cache-Control": "public, max-age=300", // Cache for 5 minutes
+        "Cache-Control": "public, max-age=0", // Cache for 5 minutes
       },
     })
   } catch (error) {
