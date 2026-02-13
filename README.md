@@ -28,8 +28,8 @@ Generate SVG cards for your **GitHub contribution streak** and **skill set** to 
 ```bash
 git clone https://github.com/your-username/GitHub-Streak-Card.git
 cd GitHub-Streak-Card
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). The app redirects to the streak card generator.
