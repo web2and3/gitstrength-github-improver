@@ -177,7 +177,7 @@ function generateSkillSetSvg(
     : ""
   const bgFill = bgDataUri
     ? `<image href="${bgDataUri}" x="0" y="0" width="${CARD_WIDTH}" height="${height}" preserveAspectRatio="xMidYMid slice" clip-path="url(#skillSetCardClip)"/>
-  <rect width="${CARD_WIDTH}" height="${height}" rx="12" ry="12" fill="${theme.backgroundColor}" fill-opacity="0.9"/>`
+  <rect width="${CARD_WIDTH}" height="${height}" rx="12" ry="12" fill="${theme.backgroundColor}" fill-opacity="0.7"/>`
     : `<rect width="${CARD_WIDTH}" height="${height}" rx="12" ry="12" fill="${theme.backgroundColor}"/>`
 
   return `<svg width="${CARD_WIDTH}" height="${height}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">

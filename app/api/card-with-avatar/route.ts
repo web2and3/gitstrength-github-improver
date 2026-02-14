@@ -203,7 +203,7 @@ function generateCardWithEmbeddedAvatar(data: any, theme: any, avatarBase64: str
 
   <!-- Background: image + overlay for web2and3, solid theme for others -->
   ${bgDataUri ? `<image href="${bgDataUri}" x="0" y="0" width="510" height="170" preserveAspectRatio="xMidYMid slice" clip-path="url(#cardClip)"/>
-  <rect width="510" height="170" rx="12" fill="${theme.backgroundColor}" fill-opacity="0.9"/>` : `<rect width="510" height="170" rx="12" fill="${theme.backgroundColor}"/>`}
+  <rect width="510" height="170" rx="12" fill="${theme.backgroundColor}" fill-opacity="0.7"/>` : `<rect width="510" height="170" rx="12" fill="${theme.backgroundColor}"/>`}
   <!-- Border -->
   <rect width="510" height="170" rx="12" fill="none" stroke="${theme.borderColor}" stroke-width="2"/>
 
