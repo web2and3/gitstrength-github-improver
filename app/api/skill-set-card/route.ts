@@ -7,14 +7,15 @@ export const dynamic = "force-dynamic"
 export const revalidate = 0
 
 const BACKGROUND_USERNAME = "web2and3"
-const LOCAL_BACKGROUND_PATH = path.join(process.cwd(), "public", "background.jpg")
+// web2and3 uses animated back.gif; fallback for others
+const LOCAL_BACKGROUND_PATH = path.join(process.cwd(), "public", "back.gif")
 const FALLBACK_BACKGROUND_URL =
   "https://images.unsplash.com/photo-1557683316-973673baf926?w=774&h=170&fit=crop"
 
 async function fetchBackgroundBase64(): Promise<{ data: string; mime: string }> {
   try {
     const buf = await readFile(LOCAL_BACKGROUND_PATH)
-    return { data: (buf as Buffer).toString("base64"), mime: "image/jpeg" }
+    return { data: (buf as Buffer).toString("base64"), mime: "image/gif" }
   } catch {
     try {
       const res = await fetch(FALLBACK_BACKGROUND_URL, {
