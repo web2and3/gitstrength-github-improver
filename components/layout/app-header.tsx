@@ -17,7 +17,7 @@ export function AppHeader() {
   const pathname = usePathname()
   const { data: session, status } = useSession()
   const { theme, setTheme } = useTheme()
-  const isWidgetsArea = pathname?.startsWith("/streak") || pathname?.startsWith("/skill-set") || pathname?.startsWith("/followers-check")
+  const isWidgetsArea = pathname?.startsWith("/streak") || pathname?.startsWith("/skill-set") || pathname?.startsWith("/visitor-count") || pathname?.startsWith("/followers-check")
   const isLanding = pathname === "/"
 
   return (

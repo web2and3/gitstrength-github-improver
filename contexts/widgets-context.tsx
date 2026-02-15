@@ -1,8 +1,8 @@
 "use client"
 
 import { createContext, useContext, useState, type ReactNode } from "react"
-import { defaultTheme, defaultSkillSetTheme } from "@/lib/widgets-types"
-import type { StreakData, CardTheme, SkillSetTheme, StepId } from "@/lib/widgets-types"
+import { defaultTheme, defaultSkillSetTheme, defaultVisitorCountTheme } from "@/lib/widgets-types"
+import type { StreakData, CardTheme, SkillSetTheme, VisitorCountTheme, StepId } from "@/lib/widgets-types"
 
 interface StreakState {
   username: string
@@ -25,6 +25,14 @@ interface SkillSetState {
   skillSetUsername: string
 }
 
+interface VisitorCountState {
+  visitorCountActiveTab: StepId
+  visitorCountKey: string
+  visitorCountGenerated: boolean
+  visitorCountTheme: VisitorCountTheme
+  visitorCountCardKey: number
+}
+
 interface WidgetsContextValue {
   streak: StreakState & {
     setUsername: (v: string) => void
@@ -44,6 +52,13 @@ interface WidgetsContextValue {
     setSkillSetTheme: (v: SkillSetTheme | ((prev: SkillSetTheme) => SkillSetTheme)) => void
     setSkillSetCardKey: (v: number | ((prev: number) => number)) => void
     setSkillSetUsername: (v: string) => void
+  }
+  visitorCount: VisitorCountState & {
+    setVisitorCountActiveTab: (v: StepId) => void
+    setVisitorCountKey: (v: string) => void
+    setVisitorCountGenerated: (v: boolean) => void
+    setVisitorCountTheme: (v: VisitorCountTheme | ((prev: VisitorCountTheme) => VisitorCountTheme)) => void
+    setVisitorCountCardKey: (v: number | ((prev: number) => number)) => void
   }
 }
 
@@ -66,6 +81,12 @@ export function WidgetsProvider({ children }: { children: ReactNode }) {
   const [skillSetTheme, setSkillSetTheme] = useState<SkillSetTheme>(defaultSkillSetTheme)
   const [skillSetCardKey, setSkillSetCardKey] = useState(0)
   const [skillSetUsername, setSkillSetUsername] = useState("")
+
+  const [visitorCountActiveTab, setVisitorCountActiveTab] = useState<StepId>("generator")
+  const [visitorCountKey, setVisitorCountKey] = useState("")
+  const [visitorCountGenerated, setVisitorCountGenerated] = useState(false)
+  const [visitorCountTheme, setVisitorCountTheme] = useState<VisitorCountTheme>(defaultVisitorCountTheme)
+  const [visitorCountCardKey, setVisitorCountCardKey] = useState(0)
 
   const value: WidgetsContextValue = {
     streak: {
@@ -101,6 +122,18 @@ export function WidgetsProvider({ children }: { children: ReactNode }) {
       setSkillSetTheme,
       setSkillSetCardKey,
       setSkillSetUsername,
+    },
+    visitorCount: {
+      visitorCountActiveTab,
+      visitorCountKey,
+      visitorCountGenerated,
+      visitorCountTheme,
+      visitorCountCardKey,
+      setVisitorCountActiveTab,
+      setVisitorCountKey,
+      setVisitorCountGenerated,
+      setVisitorCountTheme,
+      setVisitorCountCardKey,
     },
   }
 

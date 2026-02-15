@@ -146,6 +146,57 @@ export const presetSkillSetThemes: Record<string, SkillSetTheme> = {
   },
 }
 
+export interface VisitorCountTheme {
+  panelColor: string
+  textColor: string
+  labelColor: string
+  lastDigitColor: string
+  borderColor: string
+  dividerColor: string
+  backgroundColor: string
+}
+
+export const defaultVisitorCountTheme: VisitorCountTheme = {
+  panelColor: "#1e1e1e",
+  textColor: "#ffffff",
+  labelColor: "#22f374",
+  lastDigitColor: "#dc2626",
+  borderColor: "#30363d",
+  dividerColor: "#0a0a0a",
+  backgroundColor: "#1a1b27",
+}
+
+export const presetVisitorCountThemes: Record<string, VisitorCountTheme> = {
+  default: defaultVisitorCountTheme,
+  ocean: {
+    panelColor: "#0f172a",
+    textColor: "#e2e8f0",
+    labelColor: "#22f374",
+    lastDigitColor: "#0ea5e9",
+    borderColor: "#1e293b",
+    dividerColor: "#1e293b",
+    backgroundColor: "#0f172a",
+  },
+  forest: {
+    panelColor: "#14532d",
+    textColor: "#dcfce7",
+    labelColor: "#22f374",
+    lastDigitColor: "#22c55e",
+    borderColor: "#166534",
+    dividerColor: "#166534",
+    backgroundColor: "#14532d",
+  },
+  sunset: {
+    panelColor: "#451a03",
+    textColor: "#fef3c7",
+    labelColor: "#22f374",
+    lastDigitColor: "#f59e0b",
+    borderColor: "#92400e",
+    dividerColor: "#92400e",
+    backgroundColor: "#451a03",
+  },
+}
+
 export const WIDGET_STEPS = [
   { id: "generator" as const, label: "Generate", icon: Activity },
   { id: "customize" as const, label: "Customize", icon: Palette },

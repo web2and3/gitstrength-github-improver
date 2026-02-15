@@ -16,6 +16,7 @@ Make your **GitHub profile** beautiful and attractive with README widgets. Free 
 
 - **GitHub Streak Card** – Current streak, longest streak, total contributions, top languages, and profile stats in one SVG card (with or without avatar).
 - **Skill Set Widget** – Badge-style card for your tech stack (icons from [Simple Icons](https://simpleicons.org/)).
+- **Visitor Counter Card** – Badge that counts README/profile views; increments on each load.
 - **Themes** – Preset themes and custom colors via query params. API-first: all cards are served as SVG; no auth required for public card URLs.
 
 ### GitHub tools (sign in with GitHub)
@@ -33,6 +34,7 @@ Make your **GitHub profile** beautiful and attractive with README widgets. Free 
 | **/** | Home – Continue with GitHub to get started |
 | **/streak** | Streak card generator – Enter username, customize theme, copy image URL for README |
 | **/skill-set** | Skill set widget – Add skills, pick theme, copy image URL |
+| **/visitor-count** | Visitor counter – Key + label, copy README badge URL |
 | **/followers-check** | Followers tool – Unfollowers, not mutuals, follow/unfollow (requires sign-in) |
 
 ---
@@ -93,6 +95,14 @@ Replace `YOUR_DEPLOYMENT_URL` with your deployed base URL (e.g. `https://gitstre
 <img src="YOUR_DEPLOYMENT_URL/api/skill-set-card?skills=TypeScript,React,Next.js,Node.js,Tailwind%20CSS" alt="Skill Set" width="100%" />
 ```
 
+### Visitor counter
+
+Use a unique `key` (e.g. your username). The count increments each time the image is loaded.
+
+```markdown
+[![Visitors](YOUR_DEPLOYMENT_URL/api/visitor-count?key=YOUR_KEY)](YOUR_REPO_OR_PROFILE_URL)
+```
+
 ---
 
 ## API overview
@@ -103,6 +113,7 @@ Replace `YOUR_DEPLOYMENT_URL` with your deployed base URL (e.g. `https://gitstre
 | `/api/card-with-avatar` | GET | Streak card SVG (with avatar) |
 | `/api/streak` | GET | JSON streak + profile data |
 | `/api/skill-set-card` | GET | Skill set SVG |
+| `/api/visitor-count` | GET | Visitor counter badge SVG |
 | `/api/github-contributions` | POST | Contribution/streak data (used internally) |
 
 See [docs/API.md](docs/API.md) for query parameters and response formats.

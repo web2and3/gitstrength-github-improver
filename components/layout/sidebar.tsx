@@ -2,12 +2,13 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Activity, Github, LayoutGrid, UserMinus } from "lucide-react"
+import { Activity, Eye, Github, LayoutGrid, UserMinus } from "lucide-react"
 
 export function Sidebar() {
   const pathname = usePathname()
   const isStreak = pathname === "/streak" || pathname.startsWith("/streak")
   const isSkillSet = pathname === "/skill-set" || pathname.startsWith("/skill-set")
+  const isVisitorCount = pathname === "/visitor-count" || pathname.startsWith("/visitor-count")
   const isFollowersCheck = pathname === "/followers-check" || pathname.startsWith("/followers-check")
 
   return (
@@ -48,6 +49,17 @@ export function Sidebar() {
           >
             <LayoutGrid className="h-5 w-5 shrink-0" />
             Skill Set Widget
+          </Link>
+          <Link
+            href="/visitor-count"
+            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors ${
+              isVisitorCount
+                ? "bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400"
+                : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+            }`}
+          >
+            <Eye className="h-5 w-5 shrink-0" />
+            Visitor Counter
           </Link>
 
           <div className="my-2 border-t border-slate-200 dark:border-slate-700" role="separator" aria-hidden />

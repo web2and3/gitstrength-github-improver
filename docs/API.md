@@ -43,6 +43,27 @@ GET /api/card-with-avatar?username=torvalds
 
 ---
 
+### GET `/api/visitor-count`
+
+Flip-digit style visitor counter SVG. Each request increments the count for the given `key` (unless `preview=1` or `t` is set, used for app preview).
+
+| Query param | Required | Description |
+|-------------|----------|-------------|
+| `key` or `username` | Yes | Unique key for this counter (e.g. username or repo name). Normalized to safe characters. |
+| `theme` | No | JSON, URL-encoded. Keys: `panelColor`, `textColor`, `lastDigitColor`, `borderColor`, `dividerColor` |
+| `preview` or `t` | No | If set, returns current count without incrementing (for preview in app). |
+
+**Note:** Count is stored in memory and may reset on server restart. For persistent counts, use Redis/KV (future).
+
+**Example**
+
+```
+GET /api/visitor-count?key=web2and3
+GET /api/visitor-count?key=my-repo&theme=%7B%22panelColor%22%3A%22%231e1e1e%22%2C%22lastDigitColor%22%3A%22%23dc2626%22%7D
+```
+
+---
+
 ### GET `/api/skill-set-card`
 
 Skill set widget SVG.
