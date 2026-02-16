@@ -53,7 +53,7 @@ Flip-digit style visitor counter SVG. Each request increments the count for the 
 | `theme` | No | JSON, URL-encoded. Keys: `panelColor`, `textColor`, `lastDigitColor`, `borderColor`, `dividerColor` |
 | `preview` or `t` | No | If set, returns current count without incrementing (for preview in app). |
 
-**Note:** Count is stored in memory and may reset on server restart. For persistent counts, use Redis/KV (future).
+**Note:** For a single shared count across all visitors and serverless instances, set `KV_REST_API_URL` and `KV_REST_API_TOKEN` (Vercel KV) or `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` (Upstash Redis). If unset, the count is stored in memory per instance and is not shared.
 
 **Example**
 

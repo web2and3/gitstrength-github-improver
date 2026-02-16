@@ -158,7 +158,7 @@ export function VisitorCountFlow({
                   key={visitorCountCardKey}
                   src={visitorCountCardUrl}
                   alt="Visitor count"
-                  className=""
+                  className="max-h-[200px] w-auto"
                 />
               </div>
             </CardContent>
@@ -235,7 +235,7 @@ export function VisitorCountFlow({
                     key={visitorCountCardKey}
                     src={visitorCountCardUrl}
                     alt="Visitor count"
-                    className=""
+                    className="max-h-[200px] w-auto"
                   />
                 </div>
               </div>

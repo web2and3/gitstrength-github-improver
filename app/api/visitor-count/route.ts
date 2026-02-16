@@ -1,12 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server"
 import path from "path"
 import { readFile } from "fs/promises"
+import { getCount, incrementCount } from "@/lib/visitor-count-store"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
-
-/** In-memory counter. Resets on cold start in serverless; for production consider Redis/KV. */
-const store = new Map<string, number>()
 
 const WEB2AND3_KEY = "web2and3"
 const WEB2AND3_INITIAL = 9811
@@ -243,12 +241,12 @@ export async function GET(request: NextRequest) {
   let prev: number
   let current: number
   if (preview) {
-    current = store.get(safeKey) ?? (isWeb2and3 ? WEB2AND3_INITIAL : 0)
+    const stored = await getCount(safeKey)
+    current = stored ?? (isWeb2and3 ? WEB2AND3_INITIAL : 0)
     prev = Math.max(0, current - 1)
   } else {
-    prev = store.get(safeKey) ?? defaultValue
-    current = prev + 1
-    store.set(safeKey, current)
+    current = await incrementCount(safeKey, isWeb2and3 ? { seedInitial: WEB2AND3_INITIAL - 1 } : undefined)
+    prev = current - 1
   }
   const next = current + 1
 
