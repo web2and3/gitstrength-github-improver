@@ -41,6 +41,8 @@ interface VisitorCountFlowProps {
   onGenerateError: () => void
   /** When true, key is taken from logged-in user and input is disabled */
   usernameDisabled?: boolean
+  /** Logged-in GitHub username; when "web2and3", the reserved key is allowed */
+  loggedInUsername?: string
 }
 
 export function VisitorCountFlow({
@@ -63,6 +65,7 @@ export function VisitorCountFlow({
   onGenerateSuccess,
   onGenerateError,
   usernameDisabled = false,
+  loggedInUsername,
 }: VisitorCountFlowProps) {
   const steps = WIDGET_STEPS
   const [mounted, setMounted] = useState(false)
@@ -74,7 +77,8 @@ export function VisitorCountFlow({
   }, [visitorCountKey])
 
   const normalizedKey = normalizeKey(inputValue)
-  const isReservedKey = normalizedKey === RESERVED_KEY
+  const isReservedKey =
+    normalizedKey === RESERVED_KEY && loggedInUsername !== RESERVED_KEY
 
   const handleGenerate = async () => {
     if (!normalizedKey) {

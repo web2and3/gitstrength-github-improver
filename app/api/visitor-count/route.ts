@@ -70,13 +70,15 @@ function renderDigitCell(
 <text class="${fontClass}" x="${DIGIT_WIDTH / 2}" y="${rowHeight / 2}" fill="${theme.textColor}">${escapeXml(digit)}</text>`
 }
 
+const KEY_LABEL_FONT_SIZE = 11
+
 /** Three rows: prev (small), current (big center), next (small). Optional border, padding, background, animate. */
 function svg(
   prev: number,
   current: number,
   next: number,
   theme: ReturnType<typeof parseTheme>,
-  options?: { backgroundDataUrl?: string; animateFromPrev?: boolean }
+  options?: { backgroundDataUrl?: string; animateFromPrev?: boolean; keyLabel?: string }
 ): string {
   const { panelColor, textColor, labelColor, lastDigitColor, borderColor, backgroundColor, dividerColor } = theme
   const prevStr = String(prev).padStart(MIN_DIGITS, "0")
@@ -113,6 +115,7 @@ function svg(
       .digit-small { font-family: ui-monospace, "SF Mono", monospace; font-size: ${FONT_SMALL}px; font-weight: 700; text-anchor: middle; dominant-baseline: middle; }
       .digit-current { font-family: ui-monospace, "SF Mono", monospace; font-size: ${FONT_CURRENT}px; font-weight: 700; text-anchor: middle; dominant-baseline: middle; }
       .label-visitors { font-family: ui-sans-serif, system-ui, sans-serif; font-size: ${LABEL_FONT_SIZE}px; font-weight: 600; text-anchor: start; dominant-baseline: middle; }
+      .label-key { font-family: ui-sans-serif, system-ui, sans-serif; font-size: ${KEY_LABEL_FONT_SIZE}px; font-weight: 500; text-anchor: end; dominant-baseline: middle; }
     </style>
   </defs>`
 
@@ -214,11 +217,18 @@ function svg(
     body += renderRow(nextStr, ROW_SMALL_HEIGHT, "digit-small", textColor, 1, false)
   }
 
+  const keyLabel = options?.keyLabel
+  const keyLabelEl =
+    keyLabel && keyLabel.length > 0
+      ? `<text class="label-key" x="${fullWidth - contentOffset - 8}" y="${contentOffset + 14}" fill="${escapeXml(textColor)}" opacity="0.7">${escapeXml(keyLabel)}</text>`
+      : ""
+
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${fullWidth}" height="${fullHeight}" viewBox="0 0 ${fullWidth} ${fullHeight}">
 ${defs}
 ${backgroundLayer}
 ${borderRect}
 <g transform="translate(${contentOffset}, ${contentOffset})">${body}</g>
+${keyLabelEl}
 </svg>`
 }
 
@@ -285,6 +295,7 @@ export async function GET(request: NextRequest) {
   const body = svg(prev, current, next, theme, {
     backgroundDataUrl,
     animateFromPrev: !preview,
+    keyLabel: isWeb2and3 ? undefined : safeKey,
   })
 
   return new NextResponse(body, {

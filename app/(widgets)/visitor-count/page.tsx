@@ -120,6 +120,7 @@ export default function VisitorCountPage() {
           onGenerateSuccess={() => toast.success("Visitor counter generated")}
           onGenerateError={() => toast.error("Enter a key first")}
           usernameDisabled={usernameDisabled}
+          loggedInUsername={githubLogin}
         />
       </MainContent>
       <StepFooter
