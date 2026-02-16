@@ -1,15 +1,22 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Eye, Copy, Palette, Code, Activity } from "lucide-react"
+import { Eye, Copy, Palette, Code, Activity, RefreshCw } from "lucide-react"
 import { WIDGET_STEPS, presetVisitorCountThemes, defaultVisitorCountTheme } from "@/lib/widgets-types"
 import type { VisitorCountTheme, StepId } from "@/lib/widgets-types"
+
+const RESERVED_KEY = "web2and3"
+
+function normalizeKey(key: string): string {
+  return key.trim().replace(/[^a-zA-Z0-9_-]/g, "-").slice(0, 64)
+}
 
 interface VisitorCountFlowProps {
   activeTab: StepId
@@ -24,6 +31,8 @@ interface VisitorCountFlowProps {
   visitorCountCardUrl: string
   /** Same as card URL but without t= (use for Copy URL / Open so each load increments) */
   visitorCountCardUrlLive: string
+  /** Origin for API requests (e.g. window.location.origin) */
+  baseUrl: string
   updateVisitorCountThemeColor: (key: keyof VisitorCountTheme, color: string) => void
   applyVisitorCountPreset: (name: string) => void
   generateVisitorCountReadme: () => string
@@ -46,6 +55,7 @@ export function VisitorCountFlow({
   setVisitorCountCardKey,
   visitorCountCardUrl,
   visitorCountCardUrlLive,
+  baseUrl,
   updateVisitorCountThemeColor,
   applyVisitorCountPreset,
   generateVisitorCountReadme,
@@ -56,17 +66,44 @@ export function VisitorCountFlow({
 }: VisitorCountFlowProps) {
   const steps = WIDGET_STEPS
   const [mounted, setMounted] = useState(false)
+  const [generating, setGenerating] = useState(false)
+  const [inputValue, setInputValue] = useState(visitorCountKey)
   useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    setInputValue(visitorCountKey)
+  }, [visitorCountKey])
 
-  const handleGenerate = () => {
-    const key = visitorCountKey.trim().replace(/[^a-zA-Z0-9_-]/g, "-").slice(0, 64)
-    if (key) {
-      setVisitorCountGenerated(true)
-      setVisitorCountCardKey((prev) => prev + 1)
-      onGenerateSuccess()
-    } else {
+  const normalizedKey = normalizeKey(inputValue)
+  const isReservedKey = normalizedKey === RESERVED_KEY
+
+  const handleGenerate = async () => {
+    if (!normalizedKey) {
       onGenerateError()
+      return
     }
+    if (isReservedKey) {
+      toast.error("This key is reserved")
+      return
+    }
+    setVisitorCountKey(normalizedKey)
+    setGenerating(true)
+    try {
+      const url = `${baseUrl}/api/visitor-count?key=${encodeURIComponent(normalizedKey)}&preview=1&format=json`
+      const res = await fetch(url)
+      if (res.ok) {
+        const data = await res.json()
+        const count = typeof data?.count === "number" ? data.count : 0
+        if (count > 0) {
+          toast.info(`This key is already in use with ${count} visitors. Your card will continue from this count.`)
+        }
+      }
+    } catch {
+      // ignore; we still allow generate
+    }
+    setVisitorCountGenerated(true)
+    setVisitorCountCardKey((prev) => prev + 1)
+    onGenerateSuccess()
+    setGenerating(false)
   }
 
   if (!mounted) {
@@ -98,7 +135,7 @@ export function VisitorCountFlow({
           <CardContent className="space-y-4">
             {usernameDisabled && (
               <p className="text-sm text-muted-foreground">
-                Using your account: <strong>{visitorCountKey}</strong>
+                Using your account: <strong>{inputValue || visitorCountKey}</strong>
               </p>
             )}
             {!usernameDisabled && (
@@ -106,19 +143,38 @@ export function VisitorCountFlow({
                 Use a unique key per profile or repo (e.g. your username). Only letters, numbers, hyphen, underscore.
               </p>
             )}
+            {isReservedKey && (
+              <p className="text-sm text-amber-600 font-medium">
+                This key is reserved and cannot be used.
+              </p>
+            )}
             <div className="flex gap-2 flex-wrap items-end">
               <div className="space-y-2 flex-1 min-w-[200px]">
                 <Input
                   id="vc-key"
-                  placeholder="e.g. web2and3 or my-repo"
-                  value={visitorCountKey}
-                  onChange={(e) => setVisitorCountKey(e.target.value)}
+                  placeholder="e.g. my-username or my-repo"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
                   disabled={usernameDisabled}
                 />
               </div>
-              <Button onClick={handleGenerate} className="bg-green-600 hover:bg-green-700">
-                <Activity className="h-4 w-4 mr-2" />
-                Generate
+              <Button
+                type="button"
+                onClick={handleGenerate}
+                disabled={generating || !normalizedKey || isReservedKey}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                {generating ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Activity className="h-4 w-4 mr-2" />
+                    Generate
+                  </>
+                )}
               </Button>
             </div>
           </CardContent>

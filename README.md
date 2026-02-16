@@ -25,6 +25,36 @@ Make your **GitHub profile** beautiful and attractive with README widgets. Free 
 
 ---
 
+## Samples
+
+Live widgets from the deployed app. Markdown to copy, then the rendered image.
+
+### GitHub Streak Card
+
+```markdown
+<img src="https://gitstrength.netlify.app/api/card?username=yourname" alt="GitHub Streak Card" width="100%" />
+```
+
+<img src="public/readme/streak-card.png" alt="Streak card sample" width="100%" />
+
+### Skill Set Widget
+
+```markdown
+<img src="https://gitstrength.netlify.app/api/skill-set-card?skills=TypeScript,React,Next.js,Node.js,Tailwind%20CSS,Vue.js,Svelte" alt="Skill Set" width="100%" />
+```
+
+<img src="public/readme/skills-card.png" alt="Skill set sample" width="100%" />
+
+### Visitor Counter
+
+```markdown
+[![Visitors](https://gitstrength.netlify.app/api/visitor-count?key=yourname)](https://github.com/web2and3/gitstrength-github-improver)
+```
+
+<img src="public/readme/visitors-card.png" alt="Visitor counter sample" width="100%" />
+
+---
+
 ## Live demo
 
 **[Open the app →](https://gitstrength.netlify.app)**

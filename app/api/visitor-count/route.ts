@@ -78,7 +78,7 @@ function svg(
   theme: ReturnType<typeof parseTheme>,
   options?: { backgroundDataUrl?: string; animateFromPrev?: boolean }
 ): string {
-  const { panelColor, textColor, labelColor, lastDigitColor, borderColor, backgroundColor } = theme
+  const { panelColor, textColor, labelColor, lastDigitColor, borderColor, backgroundColor, dividerColor } = theme
   const prevStr = String(prev).padStart(MIN_DIGITS, "0")
   const currentStr = String(current).padStart(MIN_DIGITS, "0")
   const nextStr = String(next).padStart(MIN_DIGITS, "0")
@@ -124,6 +124,16 @@ function svg(
   const backgroundLayer = `<g clip-path="url(#${clipPathId})">${bgImageLayer}${bgColorRect}</g>`
   const borderRect = `<rect x="${BORDER_STROKE / 2}" y="${BORDER_STROKE / 2}" width="${fullWidth - BORDER_STROKE}" height="${fullHeight - BORDER_STROKE}" fill="none" stroke="${escapeXml(borderColor)}" stroke-width="${BORDER_STROKE}" rx="${BORDER_RADIUS}" ry="${BORDER_RADIUS}"/>`
 
+  /** Vertical dashed lines between digit columns. */
+  function renderDigitDividers(rowY: number, rowHeight: number): string {
+    let html = ""
+    for (let i = 1; i < MIN_DIGITS; i++) {
+      const x = baseX + i * DIGIT_WIDTH
+      html += `<line x1="${x}" y1="${rowY}" x2="${x}" y2="${rowY + rowHeight}" stroke="${escapeXml(dividerColor)}" stroke-dasharray="4 2" stroke-width="1"/>`
+    }
+    return html
+  }
+
   function renderRow(
     valueStr: string,
     rowHeight: number,
@@ -146,6 +156,7 @@ function svg(
       const textY = rowY + rowHeight / 2
       html += `<text class="${fontClass}" x="${textX}" y="${textY}" fill="${digitFill}" opacity="${digitOpacity}">${escapeXml(digits[i] ?? "0")}</text>`
     }
+    html += renderDigitDividers(rowY, rowHeight)
     if (addVisitorsLabel) {
       const labelX = baseX + digitsWidth + LABEL_GAP
       const labelY = rowY + rowHeight / 2
@@ -175,12 +186,13 @@ function svg(
         const cellFrom = renderDigitCell(fromStr[i] ?? "0", isLast, rowTheme, fontClass, rowHeight)
         const cellTo = renderDigitCell(toStr[i] ?? "0", isLast, rowTheme, fontClass, rowHeight)
         const slideContent = cellFrom + `<g transform="translate(0, ${rowHeight})">${cellTo}</g>`
-        const beginSec = (MIN_DIGITS - 1 - i) * 0.12
-        html += `<g transform="translate(${dx}, ${rowY})"><g clip-path="url(#${clipId})"><g transform="translate(0,0)"><animateTransform attributeName="transform" type="translate" from="0 0" to="0 -${rowHeight}" dur="0.4s" begin="${beginSec}s" fill="freeze"/>${slideContent}</g></g></g>`
+        const beginSec = (MIN_DIGITS - 1 - i) * 0.16
+        html += `<g transform="translate(${dx}, ${rowY})"><g clip-path="url(#${clipId})"><g transform="translate(0,0)"><animateTransform attributeName="transform" type="translate" from="0 0" to="0 -${rowHeight}" dur="0.6s" begin="${beginSec}s" fill="freeze"/>${slideContent}</g></g></g>`
       } else {
         html += `<text class="${fontClass}" x="${dx + DIGIT_WIDTH / 2}" y="${rowY + rowHeight / 2}" fill="${textColor}">${escapeXml(toStr[i] ?? "0")}</text>`
       }
     }
+    html += renderDigitDividers(rowY, rowHeight)
     if (addLabel) {
       html += `<text class="label-visitors" x="${baseX + digitsWidth + LABEL_GAP}" y="${rowY + rowHeight / 2}" fill="${labelColor}">Visitors</text>`
     }
@@ -258,6 +270,15 @@ export async function GET(request: NextRequest) {
     } catch {
       // no back.gif in public/; render without background
     }
+  }
+
+  const wantJson = searchParams.get("format") === "json" || searchParams.get("json") === "1"
+  if (wantJson) {
+    return NextResponse.json({ count: current }, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0, private",
+      },
+    })
   }
 
   const theme = parseTheme(themeParam)

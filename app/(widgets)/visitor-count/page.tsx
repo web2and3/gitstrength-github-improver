@@ -112,6 +112,7 @@ export default function VisitorCountPage() {
           setVisitorCountCardKey={setVisitorCountCardKey}
           visitorCountCardUrl={visitorCountCardUrl}
           visitorCountCardUrlLive={liveUrl}
+          baseUrl={baseUrl}
           updateVisitorCountThemeColor={updateVisitorCountThemeColor}
           applyVisitorCountPreset={applyVisitorCountPreset}
           generateVisitorCountReadme={generateVisitorCountReadme}

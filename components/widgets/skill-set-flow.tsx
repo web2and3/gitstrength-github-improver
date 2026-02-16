@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Copy, LayoutGrid, Palette, Code } from "lucide-react"
+import { Copy, LayoutGrid, Palette, Code, Activity } from "lucide-react"
 import { WIDGET_STEPS, presetSkillSetThemes, defaultSkillSetTheme } from "@/lib/widgets-types"
 import type { SkillSetTheme, StepId } from "@/lib/widgets-types"
 import { SKILL_SUGGESTIONS } from "@/lib/skill-suggestions"
@@ -190,7 +190,13 @@ export function SkillSetFlow({
                 Type to see suggestions; select with click or Enter, or press comma to finish and type next skill.
               </p>
             </div>
-            <Button onClick={handleGenerate} className="bg-green-600 hover:bg-green-700">
+            <Button
+              type="button"
+              onClick={handleGenerate}
+              disabled={!skillsInput.trim()}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              <Activity className="h-4 w-4 mr-2" />
               Generate
             </Button>
           </CardContent>
